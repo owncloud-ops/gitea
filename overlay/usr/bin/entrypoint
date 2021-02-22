@@ -1,0 +1,56 @@
+#!/usr/bin/env sh
+
+set -eo pipefail
+
+source /usr/local/lib/log.sh
+APP_DATA_PATH="/opt/app/data"
+
+if [ -z "${GITEA_SECURITY_INTERNAL_TOKEN}" ]; then
+  if [ -f ${APP_DATA_PATH}/internal ]; then
+    GITEA_SECURITY_INTERNAL_TOKEN=$(cat ${APP_DATA_PATH}/internal | head -n1)
+  else
+    log_info "Generating internal token"
+    GITEA_SECURITY_INTERNAL_TOKEN=$(gitea generate secret INTERNAL_TOKEN)
+    echo "${GITEA_SECURITY_INTERNAL_TOKEN}" >| ${APP_DATA_PATH}/internal
+    chmod 0600 ${APP_DATA_PATH}/internal
+  fi
+fi
+
+if [ -z "${GITEA_SECURITY_SECRET_KEY}" ]; then
+  if [ -f ${APP_DATA_PATH}/secret ]; then
+    GITEA_SECURITY_SECRET_KEY=$(cat ${APP_DATA_PATH}/secret | head -n1)
+  else
+    log_info "Generating secret key"
+    GITEA_SECURITY_SECRET_KEY=$(gitea generate secret SECRET_KEY)
+    echo "${GITEA_SECURITY_SECRET_KEY}" >| ${APP_DATA_PATH}/secret
+    chmod 0600 ${APP_DATA_PATH}/secret
+  fi
+fi
+
+if [ "${GITEA_SERVER_LFS_START_SERVER}" == "true" -a -z "${GITEA_SERVER_LFS_JWT_SECRET}" ]; then
+  if [ -f ${APP_DATA_PATH}/lfs ]; then
+    GITEA_SERVER_LFS_JWT_SECRET=$(cat ${APP_DATA_PATH}/lfs | head -n1)
+  else
+    log_info "Generating lfs JWT"
+    GITEA_SERVER_LFS_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
+    echo "${GITEA_SERVER_LFS_JWT_SECRET}" >| ${APP_DATA_PATH}/lfs
+    chmod 0600 ${APP_DATA_PATH}/lfs
+  fi
+fi
+
+if [ "${GITEA_OAUTH2_ENABLED}" == "true" -a -z "${GITEA_OAUTH2_JWT_SECRET}" ]; then
+  if [ -f ${APP_DATA_PATH}/oauth2 ]; then
+    GITEA_OAUTH2_JWT_SECRET=$(cat ${APP_DATA_PATH}/oauth2 | head -n1)
+  else
+    log_info "Generating OAuth2 JWT"
+    GITEA_OAUTH2_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
+    echo "${GITEA_OAUTH2_JWT_SECRET}" >| ${APP_DATA_PATH}/oauth2
+    chmod 0600 ${APP_DATA_PATH}/oauth2
+  fi
+fi
+
+/usr/local/bin/gomplate -o /opt/app/config/app.ini -f /etc/templates/app.ini.tmpl
+chmod 0600 /opt/app/config/app.ini
+
+log_info "Start Gitea\n"
+exec /usr/local/bin/gitea web -c /opt/app/config/app.ini
