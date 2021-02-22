@@ -3,49 +3,45 @@
 set -eo pipefail
 
 source /usr/local/lib/log.sh
-APP_DATA_PATH="/opt/app/data"
+SECRETS_PATH="/opt/app/data/secrets"
 
 if [ -z "${GITEA_SECURITY_INTERNAL_TOKEN}" ]; then
-  if [ -f ${APP_DATA_PATH}/internal ]; then
-    GITEA_SECURITY_INTERNAL_TOKEN=$(cat ${APP_DATA_PATH}/internal | head -n1)
+  if [ -f ${SECRETS_PATH}/internal ]; then
+    GITEA_SECURITY_INTERNAL_TOKEN=$(cat ${SECRETS_PATH}/internal | head -n1)
   else
     log_info "Generating internal token"
     GITEA_SECURITY_INTERNAL_TOKEN=$(gitea generate secret INTERNAL_TOKEN)
-    echo "${GITEA_SECURITY_INTERNAL_TOKEN}" >| ${APP_DATA_PATH}/internal
-    chmod 0600 ${APP_DATA_PATH}/internal
+    echo "${GITEA_SECURITY_INTERNAL_TOKEN}" >| ${SECRETS_PATH}/internal
   fi
 fi
 
 if [ -z "${GITEA_SECURITY_SECRET_KEY}" ]; then
-  if [ -f ${APP_DATA_PATH}/secret ]; then
-    GITEA_SECURITY_SECRET_KEY=$(cat ${APP_DATA_PATH}/secret | head -n1)
+  if [ -f ${SECRETS_PATH}/secret ]; then
+    GITEA_SECURITY_SECRET_KEY=$(cat ${SECRETS_PATH}/secret | head -n1)
   else
     log_info "Generating secret key"
     GITEA_SECURITY_SECRET_KEY=$(gitea generate secret SECRET_KEY)
-    echo "${GITEA_SECURITY_SECRET_KEY}" >| ${APP_DATA_PATH}/secret
-    chmod 0600 ${APP_DATA_PATH}/secret
+    echo "${GITEA_SECURITY_SECRET_KEY}" >| ${SECRETS_PATH}/secret
   fi
 fi
 
 if [ "${GITEA_SERVER_LFS_START_SERVER}" == "true" -a -z "${GITEA_SERVER_LFS_JWT_SECRET}" ]; then
-  if [ -f ${APP_DATA_PATH}/lfs ]; then
-    GITEA_SERVER_LFS_JWT_SECRET=$(cat ${APP_DATA_PATH}/lfs | head -n1)
+  if [ -f ${SECRETS_PATH}/lfs ]; then
+    GITEA_SERVER_LFS_JWT_SECRET=$(cat ${SECRETS_PATH}/lfs | head -n1)
   else
     log_info "Generating lfs JWT"
     GITEA_SERVER_LFS_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
-    echo "${GITEA_SERVER_LFS_JWT_SECRET}" >| ${APP_DATA_PATH}/lfs
-    chmod 0600 ${APP_DATA_PATH}/lfs
+    echo "${GITEA_SERVER_LFS_JWT_SECRET}" >| ${SECRETS_PATH}/lfs
   fi
 fi
 
 if [ "${GITEA_OAUTH2_ENABLED}" == "true" -a -z "${GITEA_OAUTH2_JWT_SECRET}" ]; then
-  if [ -f ${APP_DATA_PATH}/oauth2 ]; then
-    GITEA_OAUTH2_JWT_SECRET=$(cat ${APP_DATA_PATH}/oauth2 | head -n1)
+  if [ -f ${SECRETS_PATH}/oauth2 ]; then
+    GITEA_OAUTH2_JWT_SECRET=$(cat ${SECRETS_PATH}/oauth2 | head -n1)
   else
     log_info "Generating OAuth2 JWT"
     GITEA_OAUTH2_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
-    echo "${GITEA_OAUTH2_JWT_SECRET}" >| ${APP_DATA_PATH}/oauth2
-    chmod 0600 ${APP_DATA_PATH}/oauth2
+    echo "${GITEA_OAUTH2_JWT_SECRET}" >| ${SECRETS_PATH}/oauth2
   fi
 fi
 

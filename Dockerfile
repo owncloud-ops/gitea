@@ -34,13 +34,14 @@ RUN apk --update add --virtual .build-deps curl tar && \
     chmod 755 /usr/local/bin/wait-for && \
     mkdir -p /opt/app/config && \
     mkdir -p /opt/app/data && \
-    mkdir -p /opt/app/data/lfs && \
+    mkdir -p /opt/app/data/secrets && \
     GITEA_VERSION="${GITEA_VERSION##v}" && \
     echo "Installing Gitea version '${GITEA_VERSION}' ..." && \
     curl -SsL -o /usr/local/bin/gitea "https://github.com/go-gitea/gitea/releases/download/v${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64" && \
     chmod 755 /usr/local/bin/gitea && \
     chown -R app:app /opt/app && \
     chmod 0750 /opt/app /opt/app/config /opt/app/data && \
+    chmod 0700 /opt/app/data/secrets && \
     apk del .build-deps && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
