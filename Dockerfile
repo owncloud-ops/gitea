@@ -50,6 +50,6 @@ EXPOSE 2222 3000
 USER git
 
 ENTRYPOINT ["/usr/bin/entrypoint"]
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD /usr/bin/healthcheck
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 CMD /usr/bin/healthcheck
 WORKDIR /opt/app/data
 CMD []
