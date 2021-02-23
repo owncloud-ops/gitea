@@ -1,6 +1,6 @@
 APP_NAME = {{ getenv "GITEA_APP_NAME" "Gitea: Git with a cup of tea" }}
 RUN_MODE = {{ getenv "GITEA_RUN_MODE" "prod" }}
-RUN_USER = app
+RUN_USER = git
 
 [repository]
 ROOT = /opt/app/data/repos
@@ -250,7 +250,7 @@ PROVIDER_CONFIG = {{ getenv "GITEA_SESSION_PROVIDER_CONFIG" }}
 SESSION_LIFE_TIME = {{ getenv "GITEA_SESSION_SESSION_LIFE_TIME" "86400" }}
 
 [picture]
-AVATAR_UPLOAD_PATH = /opt/app/data/attachments
+AVATAR_UPLOAD_PATH = /opt/app/data/avatars
 REPOSITORY_AVATAR_UPLOAD_PATH = /opt/app/data/avatars
 AVATAR_MAX_WIDTH = {{ getenv "GITEA_PICTURE_AVATAR_MAX_WIDTH" "4096" }}
 AVATAR_MAX_HEIGHT = {{ getenv "GITEA_PICTURE_AVATAR_MAX_HEIGHT" "3072" }}

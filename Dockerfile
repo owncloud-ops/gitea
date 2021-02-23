@@ -19,13 +19,12 @@ ENV GOMPLATE_VERSION="${GOMPLATE_VERSION:-v3.9.0}"
 ENV WAIT_FOR_VERSION="${WAIT_FOR_VERSION:-v0.1.0}"
 
 ADD overlay /
-WORKDIR /opt/app/data
 
 RUN apk --update --no-cache add bash ca-certificates gettext asciidoc \
     git git-lfs gnupg openssh-keygen
 
-RUN addgroup -g 1001 -S app && \
-    adduser -S -D -H -u 1001 -h /opt/app -s /bin/bash -G app -g app app
+RUN addgroup -g 1001 -S git && \
+    adduser -S -D -H -u 1001 -h /opt/app -s /bin/bash -G git -g git git
 
 RUN apk --update add --virtual .build-deps curl tar && \
     curl -SsL -o /usr/local/bin/gomplate "https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64-slim" && \
@@ -39,7 +38,7 @@ RUN apk --update add --virtual .build-deps curl tar && \
     echo "Installing Gitea version '${GITEA_VERSION}' ..." && \
     curl -SsL -o /usr/local/bin/gitea "https://github.com/go-gitea/gitea/releases/download/v${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64" && \
     chmod 755 /usr/local/bin/gitea && \
-    chown -R app:app /opt/app && \
+    chown -R git:git /opt/app && \
     chmod 0750 /opt/app /opt/app/config /opt/app/data && \
     chmod 0700 /opt/app/data/secrets && \
     apk del .build-deps && \
@@ -48,7 +47,9 @@ RUN apk --update add --virtual .build-deps curl tar && \
 
 EXPOSE 2222 3000
 
-USER app
+USER git
 
 ENTRYPOINT ["/usr/bin/entrypoint"]
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD /usr/bin/healthcheck
+WORKDIR /opt/app/data
 CMD []
