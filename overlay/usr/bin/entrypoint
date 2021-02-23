@@ -51,4 +51,4 @@ chmod 0600 /opt/app/config/app.ini
 unset GITEA_SECURITY_INTERNAL_TOKEN GITEA_SECURITY_SECRET_KEY GITEA_SERVER_LFS_JWT_SECRET GITEA_OAUTH2_JWT_SECRET
 
 log_info "Start Gitea\n"
-exec /usr/local/bin/gitea web -c /opt/app/config/app.ini
+exec /usr/bin/gitea web -c /opt/app/config/app.ini
