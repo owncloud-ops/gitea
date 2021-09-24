@@ -12,7 +12,7 @@ ARG GOMPLATE_VERSION
 ARG WAIT_FOR_VERSION
 
 # renovate: datasource=docker depName=gitea/gitea
-ENV GITEA_VERSION="${BUILD_VERSION:-1.15.2}"
+ENV GITEA_VERSION="${BUILD_VERSION:-1.15.3}"
 # renovate: datasource=github-releases depName=hairyhenderson/gomplate
 ENV GOMPLATE_VERSION="${GOMPLATE_VERSION:-v3.9.0}"
 # renovate: datasource=github-releases depName=thegeeklab/wait-for
