@@ -214,7 +214,7 @@ QUEUE_LENGTH = {{ getenv "GITEA_WEBHOOK_QUEUE_LENGTH" "1000" }}
 DELIVER_TIMEOUT = {{ getenv "GITEA_WEBHOOK_DELIVER_TIMEOUT" "5" }}
 SKIP_TLS_VERIFY = {{ getenv "GITEA_WEBHOOK_SKIP_TLS_VERIFY" "false" | conv.Bool }}
 PAGING_NUM = {{ getenv "GITEA_WEBHOOK_PAGING_NUM" "10" }}
-ALLOWED_HOST_LIST = {{ getenv "GITEA_ALLOWED_HOST_LIST" "external" }}
+ALLOWED_HOST_LIST = {{ getenv "GITEA_WEBHOOK_ALLOWED_HOST_LIST" "external" }}
 
 [mailer]
 ENABLED = {{ getenv "GITEA_MAILER_ENABLED" "false" | conv.Bool }}
