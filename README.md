@@ -3,7 +3,7 @@
 [![Build Status](https://drone.owncloud.com/api/badges/owncloud-ops/gitea/status.svg)](https://drone.owncloud.com/owncloud-ops/gitea/)
 [![Docker Hub](https://img.shields.io/badge/docker-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/owncloudops/gitea)
 
-Docker image for Gitea.
+Custom container image for [Gitea](https://gitea.io/).
 
 ## Ports
 
