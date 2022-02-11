@@ -1,9 +1,9 @@
 ---
 repository:
   name: gitea
-  description: Docker image for Gitea
+  description: Custom container image for Gitea
   homepage: https://hub.docker.com/r/owncloudops/gitea
-  topics: docker, gitea
+  topics: oci, container, gitea
 
   private: false
   has_issues: true
