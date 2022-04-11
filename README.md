@@ -338,4 +338,4 @@ docker build --build-arg BUILD_VERSION=1.13.0 -f Dockerfile -t gitea:latest .
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](https://github.com/owncloud-ops/gitea/blob/master/LICENSE) file for details.
+This project is licensed under the Apache 2.0 License - see the [LICENSE](https://github.com/owncloud-ops/gitea/blob/main/LICENSE) file for details.
