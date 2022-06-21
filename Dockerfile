@@ -30,9 +30,9 @@ RUN addgroup -g 1001 -S git && \
     adduser -S -D -H -u 1001 -h /opt/app -s /bin/bash -G git -g git git
 
 RUN apk --update add --virtual .build-deps curl tar && \
-    curl -SsL -o /usr/local/bin/gomplate "https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64" && \
-    curl -SsL -o /usr/local/bin/wait-for "https://github.com/thegeeklab/wait-for/releases/download/${WAIT_FOR_VERSION}/wait-for" && \
-    curl -SsL "https://github.com/owncloud-ops/container-library/releases/download/${CONTAINER_LIBRARY_VERSION}/container-library.tar.gz" | tar xz -C / && \
+    curl -SsfL -o /usr/local/bin/gomplate "https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64" && \
+    curl -SsfL -o /usr/local/bin/wait-for "https://github.com/thegeeklab/wait-for/releases/download/${WAIT_FOR_VERSION}/wait-for" && \
+    curl -SsfL "https://github.com/owncloud-ops/container-library/releases/download/${CONTAINER_LIBRARY_VERSION}/container-library.tar.gz" | tar xz -C / && \
     chmod 755 /usr/local/bin/gomplate && \
     chmod 755 /usr/local/bin/wait-for && \
     mkdir -p /opt/app/config && \
@@ -40,7 +40,7 @@ RUN apk --update add --virtual .build-deps curl tar && \
     mkdir -p /opt/app/data/secrets && \
     GITEA_VERSION="${GITEA_VERSION##v}" && \
     echo "Installing Gitea version '${GITEA_VERSION}' ..." && \
-    curl -SsL -o /usr/bin/gitea "https://github.com/go-gitea/gitea/releases/download/v${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64" && \
+    curl -SsfL -o /usr/bin/gitea "https://github.com/go-gitea/gitea/releases/download/v${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64" && \
     chmod 755 /usr/bin/gitea && \
     chown -R git:git /opt/app && \
     chmod 0750 /opt/app /opt/app/config /opt/app/data && \
