@@ -15,7 +15,7 @@ ARG CONTAINER_LIBRARY_VERSION
 # renovate: datasource=docker depName=gitea/gitea
 ENV GITEA_VERSION="${BUILD_VERSION:-1.16.9}"
 # renovate: datasource=github-releases depName=hairyhenderson/gomplate
-ENV GOMPLATE_VERSION="${GOMPLATE_VERSION:-v3.11.1}"
+ENV GOMPLATE_VERSION="${GOMPLATE_VERSION:-v3.11.2}"
 # renovate: datasource=github-releases depName=thegeeklab/wait-for
 ENV WAIT_FOR_VERSION="${WAIT_FOR_VERSION:-v0.2.0}"
 # renovate: datasource=github-releases depName=owncloud-ops/container-library
