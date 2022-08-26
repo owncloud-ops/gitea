@@ -5,7 +5,9 @@ set -eo pipefail
 
 # shellcheck disable=SC3046,SC1091
 source /usr/local/lib/log.sh
-SECRETS_PATH="/opt/app/data/secrets"
+
+DATA_PATH="/opt/app/data"
+SECRETS_PATH="${DATA_PATH}/secrets"
 
 if [ -z "${GITEA_SECURITY_INTERNAL_TOKEN}" ]; then
   if [ -f ${SECRETS_PATH}/internal ]; then
@@ -53,6 +55,11 @@ if [ "${GITEA_OAUTH2_ENABLED}" = "true" ] && [ -z "${GITEA_OAUTH2_JWT_SECRET}" ]
     export GITEA_OAUTH2_JWT_SECRET
     echo "${GITEA_OAUTH2_JWT_SECRET}" >|${SECRETS_PATH}/oauth2
   fi
+fi
+
+if [ ! -f "${DATA_PATH}/ssh/gitea.ed25519" ]; then
+  mkdir -p "${DATA_PATH}/ssh"
+  ssh-keygen -q -t ed25519 -f "${DATA_PATH}/ssh/gitea.ed25519" -N ''
 fi
 
 /usr/local/bin/gomplate -o /opt/app/config/app.ini -f /etc/templates/app.ini.tmpl
