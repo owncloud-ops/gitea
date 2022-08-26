@@ -11,8 +11,6 @@ ANSI_CHARSET = {{ getenv "GITEA_REPO_ANSI_CHARSET" }}
 FORCE_PRIVATE = {{ getenv "GITEA_REPO_FORCE_PRIVATE" "false" | conv.ToBool }}
 DEFAULT_PRIVATE = {{ getenv "GITEA_REPO_DEFAULT_PRIVATE" "last" }}
 MAX_CREATION_LIMIT = {{ getenv "GITEA_REPO_MAX_CREATION_LIMIT" "-1" }}
-MIRROR_QUEUE_LENGTH = {{ getenv "GITEA_REPO_MIRROR_QUEUE_LENGTH" "1000" }}
-PULL_REQUEST_QUEUE_LENGTH = {{ getenv "GITEA_REPO_PULL_REQUEST_QUEUE_LENGTH" "1000" }}
 PREFERRED_LICENSES = {{ getenv "GITEA_REPO_PREFERRED_LICENSES" "Apache License 2.0,MIT License" }}
 DISABLE_HTTP_GIT = {{ getenv "GITEA_REPO_DISABLE_HTTP_GIT" "false" | conv.ToBool }}
 {{- if getenv "GITEA_REPO_ACCESS_CONTROL_ALLOW_ORIGIN" }}
@@ -117,7 +115,6 @@ ENABLE_PPROF = {{ getenv "GITEA_SERVER_ENABLE_PPROF" "false" | conv.ToBool }}
 PPROF_DATA_PATH = /opt/app/data/pprof
 LANDING_PAGE = {{ getenv "GITEA_SERVER_LANDING_PAGE" "home" }}
 LFS_START_SERVER = {{ getenv "GITEA_SERVER_LFS_START_SERVER" "false" | conv.ToBool }}
-LFS_CONTENT_PATH = /opt/app/data/lfs
 {{- if getenv "GITEA_SERVER_LFS_JWT_SECRET" }}
 LFS_JWT_SECRET = {{ getenv "GITEA_SERVER_LFS_JWT_SECRET" }}
 {{- end }}
@@ -157,16 +154,30 @@ MAX_OPEN_CONNS = {{ getenv "GITEA_DATABASE_MAX_OPEN_CONNS" "0" }}
 [indexer]
 ISSUE_INDEXER_TYPE = bleve
 ISSUE_INDEXER_PATH = /opt/app/data/indexers/issues.bleve
-ISSUE_INDEXER_QUEUE_TYPE = {{ getenv "GITEA_INDEXER_ISSUE_QUEUE_TYPE" "levelqueue" }}
-ISSUE_INDEXER_QUEUE_DIR = /opt/app/data/indexers/issues.queue
-ISSUE_INDEXER_QUEUE_BATCH_NUMBER = {{ getenv "GITEA_INDEXER_ISSUE_QUEUE_BATCH_NUMBER" "20" }}
 {{- if getenv "GITEA_INDEXER_ISSUE_QUEUE_CONN_STR" }}
 ISSUE_INDEXER_QUEUE_CONN_STR = "addrs={{ getenv "GITEA_INDEXER_ISSUE_QUEUE_CONN_STR" }}"
 {{- end }}
 REPO_INDEXER_ENABLED = {{ getenv "GITEA_INDEXER_REPO_ENABLED" "false" | conv.ToBool }}
 REPO_INDEXER_PATH = /opt/app/data/indexers/repos.bleve
-UPDATE_BUFFER_LEN = {{ getenv "GITEA_INDEXER_UPDATE_BUFFER_LEN" "20" }}
 MAX_FILE_SIZE = {{ getenv "GITEA_INDEXER_MAX_FILE_SIZE" "1048576" }}
+
+[queue.issue_indexer]
+DATADIR = /opt/app/data/indexers/issues.queue
+BATCH_LENGTH = {{ getenv "GITEA_QUEUE_ISSUE_INDEXER_BATCH_LENGTH" "20" }}
+LENGTH = {{ getenv "GITEA_QUEUE_ISSUE_INDEXER_LENGTH" "20" }}
+
+[queue.task]
+QUEUE_TYPE = {{ getenv "GITEA_QUEUE_TASK_TYPE" "channel" }}
+LENGTH = {{ getenv "GITEA_QUEUE_TASK_LENGTH" "1000" }}
+
+[queue.mailer]
+LENGTH = {{ getenv "GITEA_QUEUE_MAILER_LENGTH" "100" }}
+
+[queue.pr_patch_checker]
+LENGTH = {{ getenv "GITEA_QUEUE_PR_PATCH_CHECKER_LENGTH" "1000" }}
+
+[queue.mirror]
+LENGTH = {{ getenv "GITEA_QUEUE_MIRROR_LENGTH" "1000" }}
 
 [admin]
 DISABLE_REGULAR_ORG_CREATION = {{ getenv "GITEA_ADMIN_DISABLE_REGULAR_ORG_CREATION" "false" | conv.ToBool }}
@@ -218,7 +229,6 @@ ALLOWED_HOST_LIST = {{ getenv "GITEA_WEBHOOK_ALLOWED_HOST_LIST" "external" }}
 
 [mailer]
 ENABLED = {{ getenv "GITEA_MAILER_ENABLED" "false" | conv.ToBool }}
-SEND_BUFFER_LEN = {{ getenv "GITEA_MAILER_SEND_BUFFER_LEN" "100" }}
 SUBJECT_PREFIX = {{ getenv "GITEA_MAILER_SUBJECT_PREFIX" }}
 HOST = {{ getenv "GITEA_MAILER_HOST" }}
 DISABLE_HELO = {{ getenv "GITEA_MAILER_DISABLE_HELO" }}
@@ -327,6 +337,9 @@ GC = {{ getenv "GITEA_GIT_TIMEOUT_GC" "60" }}
 DEFAULT_INTERVAL = {{ getenv "GITEA_MIRROR_DEFAULT_INTERVAL" "8h" }}
 MIN_INTERVAL = {{ getenv "GITEA_MIRROR_MIN_INTERVAL" "10m" }}
 
+[lfs]
+PATH = /opt/app/data/lfs
+
 [api]
 ENABLE_SWAGGER = {{ getenv "GITEA_API_ENABLE_SWAGGER" "true" | conv.ToBool }}
 MAX_RESPONSE_ITEMS = {{ getenv "GITEA_API_MAX_RESPONSE_ITEMS" "50" }}
@@ -377,8 +390,6 @@ ENABLED = {{ getenv "GITEA_METRICS_ENABLED" "false" | conv.ToBool }}
 TOKEN = {{ getenv "GITEA_METRICS_TOKEN" }}
 
 [task]
-QUEUE_TYPE = {{ getenv "GITEA_TASK_QUEUE_TYPE" "channel" }}
-QUEUE_LENGTH = {{ getenv "GITEA_TASK_QUEUE_LENGTH" "1000" }}
 {{- if getenv "GITEA_TASK_QUEUE_CONN_STR" }}
 QUEUE_CONN_STR = "{{ getenv "GITEA_TASK_QUEUE_CONN_STR" }}"
 {{- end }}
