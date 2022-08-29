@@ -5,14 +5,16 @@ set -eo pipefail
 
 # shellcheck disable=SC3046,SC1091
 source /usr/local/lib/log.sh
-SECRETS_PATH="/opt/app/data/secrets"
+
+DATA_PATH="/opt/app/data"
+SECRETS_PATH="${DATA_PATH}/secrets"
 
 if [ -z "${GITEA_SECURITY_INTERNAL_TOKEN}" ]; then
   if [ -f ${SECRETS_PATH}/internal ]; then
     GITEA_SECURITY_INTERNAL_TOKEN=$(cat ${SECRETS_PATH}/internal | head -n1)
     export GITEA_SECURITY_INTERNAL_TOKEN
   else
-    log_info "Generating internal token"
+    log_info "Generate internal token"
     GITEA_SECURITY_INTERNAL_TOKEN=$(gitea generate secret INTERNAL_TOKEN)
     export GITEA_SECURITY_INTERNAL_TOKEN
     echo "${GITEA_SECURITY_INTERNAL_TOKEN}" >|${SECRETS_PATH}/internal
@@ -24,7 +26,7 @@ if [ -z "${GITEA_SECURITY_SECRET_KEY}" ]; then
     GITEA_SECURITY_SECRET_KEY=$(cat ${SECRETS_PATH}/secret | head -n1)
     export GITEA_SECURITY_SECRET_KEY
   else
-    log_info "Generating secret key"
+    log_info "Generate secret key"
     GITEA_SECURITY_SECRET_KEY=$(gitea generate secret SECRET_KEY)
     export GITEA_SECURITY_SECRET_KEY
     echo "${GITEA_SECURITY_SECRET_KEY}" >|${SECRETS_PATH}/secret
@@ -36,7 +38,7 @@ if [ "${GITEA_SERVER_LFS_START_SERVER}" = "true" ] && [ -z "${GITEA_SERVER_LFS_J
     GITEA_SERVER_LFS_JWT_SECRET=$(cat ${SECRETS_PATH}/lfs | head -n1)
     export GITEA_SERVER_LFS_JWT_SECRET
   else
-    log_info "Generating lfs JWT"
+    log_info "Generate lfs JWT"
     GITEA_SERVER_LFS_JWT_SECRET=$(gitea generate secret LFS_JWT_SECRET)
     export GITEA_SERVER_LFS_JWT_SECRET
     echo "${GITEA_SERVER_LFS_JWT_SECRET}" >|${SECRETS_PATH}/lfs
@@ -48,11 +50,23 @@ if [ "${GITEA_OAUTH2_ENABLED}" = "true" ] && [ -z "${GITEA_OAUTH2_JWT_SECRET}" ]
     GITEA_OAUTH2_JWT_SECRET=$(cat ${SECRETS_PATH}/oauth2 | head -n1)
     export GITEA_OAUTH2_JWT_SECRET
   else
-    log_info "Generating OAuth2 JWT"
+    log_info "Generate OAuth2 JWT"
     GITEA_OAUTH2_JWT_SECRET=$(gitea generate secret JWT_SECRET)
     export GITEA_OAUTH2_JWT_SECRET
     echo "${GITEA_OAUTH2_JWT_SECRET}" >|${SECRETS_PATH}/oauth2
   fi
+fi
+
+if [ ! -f "${DATA_PATH}/ssh/gitea.ed25519" ]; then
+  log_info "Generate ed25519 host keys"
+  mkdir -p "${DATA_PATH}/ssh"
+  ssh-keygen -q -t ed25519 -f "${DATA_PATH}/ssh/gitea.ed25519" -N ''
+fi
+
+if [ ! -f "${DATA_PATH}/ssh/gitea.rsa" ]; then
+  log_info "Generate rsa host keys"
+  mkdir -p "${DATA_PATH}/ssh"
+  ssh-keygen -q -b 4096 -t rsa -f "${DATA_PATH}/ssh/gitea.rsa" -N ''
 fi
 
 /usr/local/bin/gomplate -o /opt/app/config/app.ini -f /etc/templates/app.ini.tmpl

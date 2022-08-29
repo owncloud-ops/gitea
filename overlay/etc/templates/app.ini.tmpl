@@ -106,6 +106,7 @@ SSH_SERVER_MACS = {{ getenv "GITEA_SERVER_SSH_SERVER_MACS" }}
 {{- end }}
 SSH_BACKUP_AUTHORIZED_KEYS = {{ getenv "GITEA_SERVER_SSH_BACKUP_AUTHORIZED_KEYS" "true" | conv.ToBool }}
 SSH_EXPOSE_ANONYMOUS = {{ getenv "GITEA_SERVER_SSH_EXPOSE_ANONYMOUS" "false" | conv.ToBool }}
+SSH_SERVER_HOST_KEYS = ssh/gitea.ed25519,ssh/gitea.rsa,ssh/gogs.rsa
 MINIMUM_KEY_SIZE_CHECK = {{ getenv "GITEA_SERVER_MINIMUM_KEY_SIZE_CHECK" "false" | conv.ToBool }}
 OFFLINE_MODE = {{ getenv "GITEA_SERVER_OFFLINE_MODE" "false" | conv.ToBool }}
 DISABLE_ROUTER_LOG = {{ getenv "GITEA_SERVER_DISABLE_ROUTER_LOG" "false" | conv.ToBool }}
