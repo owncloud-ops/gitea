@@ -19,8 +19,8 @@ ACCESS_CONTROL_ALLOW_ORIGIN = {{ getenv "GITEA_REPO_ACCESS_CONTROL_ALLOW_ORIGIN"
 USE_COMPAT_SSH_URI = {{ getenv "GITEA_REPO_USE_COMPAT_SSH_URI" "false" | conv.ToBool }}
 DEFAULT_CLOSE_ISSUES_VIA_COMMITS_IN_ANY_BRANCH = {{ getenv "GITEA_REPO_DEFAULT_CLOSE_ISSUES_VIA_COMMITS_IN_ANY_BRANCH" "false" | conv.ToBool }}
 DEFAULT_REPO_UNITS = {{ getenv "GITEA_REPO_DEFAULT_UNITS" "repo.code,repo.releases,repo.issues,repo.pulls,repo.wiki,repo.projects,repo.packages" }}
-{{- if getenv "DISABLED_REPO_UNITS" }}
-DISABLED_REPO_UNITS = {{ getenv "DISABLED_REPO_UNITS" }}
+{{- if getenv "GITEA_REPO_DISABLED_UNITS" }}
+DISABLED_REPO_UNITS = {{ getenv "GITEA_REPO_DISABLED_UNITS" }}
 {{- end }}
 
 [repository.editor]
