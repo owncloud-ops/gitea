@@ -3,7 +3,7 @@
 # shellcheck disable=SC3040
 set -eo pipefail
 
-URL=http://127.0.0.1:3000
+URL=http://127.0.0.1:3000/api/healthz
 wget --quiet --tries=1 --spider ${URL} || exit 1
 
 exit 0
