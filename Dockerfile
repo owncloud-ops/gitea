@@ -23,13 +23,12 @@ ENV CONTAINER_LIBRARY_VERSION="${CONTAINER_LIBRARY_VERSION:-v0.1.0}"
 
 ADD overlay /
 
-RUN apk --update --no-cache add bash ca-certificates gettext asciidoc \
-    git git-lfs gnupg openssh-keygen
-
 RUN addgroup -g 1001 -S git && \
     adduser -S -D -H -u 1001 -h /opt/app -s /bin/bash -G git -g git git
 
 RUN apk --update add --virtual .build-deps curl tar && \
+    apk --update --no-cache add bash ca-certificates gettext asciidoc git git-lfs gnupg openssh-keygen && \
+    apk upgrade --no-cache libcrypto3 libssl3 && \
     curl -SsfL -o /usr/local/bin/gomplate "https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_linux-amd64" && \
     curl -SsfL -o /usr/local/bin/wait-for "https://github.com/thegeeklab/wait-for/releases/download/${WAIT_FOR_VERSION}/wait-for" && \
     curl -SsfL "https://github.com/owncloud-ops/container-library/releases/download/${CONTAINER_LIBRARY_VERSION}/container-library.tar.gz" | tar xz -C / && \
