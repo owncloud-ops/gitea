@@ -140,7 +140,6 @@ NAME = {{ getenv "GITEA_DATABASE_NAME" "gitea" }}
 USER = {{ getenv "GITEA_DATABASE_USERNAME" }}
 PASSWD = `{{ getenv "GITEA_DATABASE_PASSWORD" }}`
 SSL_MODE = {{ getenv "GITEA_DATABASE_SSL" "false" | conv.ToBool }}
-CHARSET = {{ getenv "GITEA_DATABASE_CHARSET" "utf8mb4" }}
 {{- end }}
 
 {{- if eq (getenv "GITEA_DATABASE_TYPE" "sqlite3") "sqlite3" }}
